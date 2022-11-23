@@ -1,5 +1,7 @@
-const jokeButton = document.querySelector(".getjoke");
-const jokeHolder = document.querySelector(".joke");
+const jokeButton = document.querySelector('.getJoke');
+const jokeButtonSpan = jokeButton.querySelector('.jokeText');
+const jokeHolder = document.querySelector('.joke p');
+const loader = document.querySelector('.loader');
 
 const buttonText = [
     "Ugh.",
@@ -13,12 +15,26 @@ const buttonText = [
 ];
 
 async function fetchJoke() {
-    const response = await fetch("http://icanhazdadjoke.com", {
+    // turn loader on
+    loader.classList.remove('hidden');
+    const response = await fetch('https://icanhazdadjoke.com', {
         headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
         },
     });
-    return response.json();
+    const data = await response.json();
+    // turn the loader off
+    loader.classList.add('hidden');
+    return data;
+}
+
+function randomItemFromArray(arr, not) {
+    const item = arr[Math.floor(Math.random() * arr.length)];
+    if (item === not) {
+        console.log('Ahh we used that one last time, look again');
+        return randomItemFromArray(arr, not);
+    }
+    return item;
 }
 
 async function handleClick() {
@@ -33,12 +49,6 @@ async function handleClick() {
     );
 }
 
-function randomItemFromArray(arr, not) {
-    const item = arr[Math.floor(Math.random() * arr.length)];
-    if (item == not) {
-        console.log("Ah! we used that one last time, look again");
-        return randomItemFromArray(arr, not);
-    }
-}
+
 
 jokeButton.addEventListener("click", handleClick);
